@@ -8,13 +8,7 @@ from utils import create_url_list
 
 
 # Тут хотелось бы сделать фикстурой, но нам нужна параметризация, а вызывать фикстуру в @pytest.mark.parametrize нельзя
-@allure.feature('api test')
-@allure.story("Create Url list")
-def url_list():
-    urls_list = create_url_list()
-    return urls_list
-
-
+# Можно перейти на ООП если допустим нам необходимо искать разные поля и в класс и передавать необходимое поле
 list_url = create_url_list()
 
 
@@ -27,7 +21,6 @@ def test_opening_pages(route):
     check_response_status_code(response, expected_status_code=200, message=f"Ошибка при открытии: {url}")
 
     # Проверяем Summary на наличие текста
-    response_data = response.json()
-    summary = response_data['summary']
+    summary = response.json().get('summary', None)
     assert isinstance(summary, str), f"Summary имеет отличный от строки тип данных. Summary: {summary}"
-    assert len(summary) > 0, f'Отсутствует summary на странице {url_on_fe}{route}'
+    assert summary, f'Отсутствует summary на странице {url_on_fe}{route}'

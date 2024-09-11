@@ -21,10 +21,11 @@ def search_by_slug(response_data):
 
 def create_url_list():
     url = f'{get_info_url}/table-of-contents'
-    response = requests.get(url)
-    check_response_status_code(response, expected_status_code=200, message=f"Ошибка при поиске списка вкладок: {url}")
-    response_data = response.json()
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        pytest.exit(e)
 
     # Ищем все URL И создаем из них список
-    urls_list = search_by_slug(response_data)
-    return urls_list
+    return search_by_slug(response.json())
