@@ -20,7 +20,8 @@ def test_opening_pages(route):
     response = requests.get(url)
     check_response_status_code(response, expected_status_code=200, message=f"Ошибка при открытии: {url}")
 
-    # Проверяем Summary на наличие текста
+    # Проверяем Summary на наличие текста и корректного типа данных
     summary = response.json().get('summary', None)
-    assert isinstance(summary, str), f"Summary имеет отличный от строки тип данных. Summary: {summary}"
     assert summary, f'Отсутствует summary на странице {url_on_fe}{route}'
+    assert isinstance(summary, str), f"Summary имеет отличный от строки тип данных. Summary: {summary}"
+
